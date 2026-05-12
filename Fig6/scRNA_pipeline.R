@@ -144,36 +144,6 @@ DimPlot(seob, reduction = "umap",  group.by = "MouseID",
         label = F)
 dev.off()
 
-DimPlot(seob, reduction = "umap",  group.by = "type", 
-        label = F)
-
-seob <- FindNeighbors(seob, dims = 1:26)
-seob <- FindClusters(seob, resolution = 0.3, # 值越大，cluster 越多
-                     random.seed = 1) 
-
-#pdf(file = 'plot/umap_raw_18_0.6.pdf',width = 6.6,height = 6)
-
-colors <- colorRampPalette(brewer.pal(8,"Paired"))(length(levels(as.factor(seob$seurat_clusters))))
-DimPlot(seob, reduction = "umap", 
-        group.by  = "seurat_clusters",
-        cols = colors,
-        label = T)
-
-pdf(file = paste0(tissue,'_umap_26_0.3.pdf'),width = 13,height = 6)
-p1 <- DimPlot(seob, reduction = "umap", 
-              group.by  = "seurat_clusters",
-              cols = colors,
-              label = T)
-
-p2 <- DimPlot(seob, reduction = "umap", 
-              group.by  = "type",
-              label = T)
-p1+p2
-dev.off()
-save(seob,file = 'seob_harmony_30_0.3.rda')
-
-table(seob$seurat_clusters, seob$type)
-
 markers <- FindAllMarkers(seob, only.pos = TRUE,logfc.threshold = 0.5)
 markers <- markers[order(markers$cluster, -markers$avg_log2FC, markers$p_val),]
 write.csv(markers,file=paste0(tissue,'_use_14_100_0.4_markers.csv'),quote=F)
@@ -202,12 +172,11 @@ cluster2type <- c("0"='CM_WT',
                   "17"="Unknown")
 
 seob[['cell_type']] = unname(cluster2type[seob@meta.data$seurat_clusters])
-source('/media/ggj/ggj/CJY/Code/source/cell_prop_LDY.R')
+source('./Code/source/cell_prop_LDY.R')
 prop = cell_prop_LDY(seob = seob ,cell_type = 'cell_type',
                      group ='type',position = 'fill')
 
 colors <- colorRampPalette(brewer.pal(8,"Paired"))(length(levels(as.factor(seob$cell_type))))
-colors <- c('#C3DDEB','#769BC9','#CBE3AF','#86B96B','#F6BAB8','#EA7250','#FAD19C','#F5A661')
 colors <- c('#9999B8','#957dad','#D4B3D2','#8CB4B1','#019092','#B8DBDB','#B091B4','#D3D3E9','#E9D5BA','#EAC09A')
 
 pdf(file = paste0(tissue,'_umap_anno_separate_14_100_0.4.pdf'),width = 16,height = 6)
@@ -238,8 +207,6 @@ marker <- markerlist_heart_2_$marker
 marker <- strsplit(marker,',')
 marker <- unlist(marker)
 marker <- gsub(' ', '',marker)
-marker <- marker[!marker %in% c( "Sox10" , "Ntm" ,   "Gria2")]
-
 
 gene_cell_exp <- AverageExpression(seob,
                                    group.by = 'cell_type') 
