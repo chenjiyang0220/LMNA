@@ -12,8 +12,8 @@ sample_name=$(basename `pwd`)
 dropseq_root=/path/Drop-seq_tools-2.5.1
 
 # fastq --> bam
-# java -jar ${dropseq_root}/3rdParty/picard/picard.jar FastqToSam F1=R1.fq.gz F2=R2.fq.gz \
-#   O=H.bam QUALITY_FORMAT=Standard SAMPLE_NAME=sample_name TMP_DIR=$tmpdir 
+ java -jar ${dropseq_root}/3rdParty/picard/picard.jar FastqToSam F1=R1.fq.gz F2=R2.fq.gz \
+   O=H.bam QUALITY_FORMAT=Standard SAMPLE_NAME=sample_name TMP_DIR=$tmpdir 
 
 # #########################Paired################################
 
