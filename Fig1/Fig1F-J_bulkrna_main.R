@@ -1,7 +1,5 @@
 library("FactoMineR")
 library("factoextra")
-library(GSEABase)
-library(GSVA)
 library(clusterProfiler)
 library("enrichplot")
 library(ggplot2)
